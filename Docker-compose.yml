@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  java_app:
+    container_name: java_app
+    image: java:8-jdk-alpine
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - DATABASE_URL=jdbc:postgresql://java_db:5432/postgresdb
+      - DATABASE_USERNAME= postgres
+      - DATABASE_PASSWORD= postgres
+    depends_on:
+      - java_db
+    
+  
+  java_db:
+    container_name: java_db
+    image: postgres:latest
+    ports:
+      - "5432:5432"  # Ensure space and quotes around port mappings
+    environment:
+      POSTGRES_USER: postgres  # Corrected from POSTGRES_USERNAME to POSTGRES_USER
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgresdb
+    volumes:
+      - pgdata:/var/lib/postgresql/data  # Ensure no space between volume and path
+
+volumes:
+  pgdata: {}
